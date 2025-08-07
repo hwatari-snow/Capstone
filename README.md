@@ -1,6 +1,8 @@
 # Capstone
 
 ### 提案するリポジトリ構成
+
+```
 Capstone/
 ├── README.md                 # プロジェクトの概要やセットアップ手順を記載
 ├── docs/                     # ドキュメント類を格納
@@ -11,7 +13,7 @@ Capstone/
 │   ├── faa/                    # FAA（連邦航空局）データ
 │   └── adsb_historical/        # 過去のADS-Bデータ（KAPA, KBFI）
 │
-├── notebook/                      # Snowflakeで実行するSQLスクリプト
+├── notebook/                 # Snowflakeで実行するSQLスクリプト
 │   ├── 0_setup.sql             # DB, Warehouse, Schemaなどの初期セットアップ
 │   ├── 1_ingestion.sql         # 履歴データとFAAデータのロード、Stream/Pipeの作成
 │   ├── 2_transformation.sql    # Streams/TasksやDynamic Tablesを使ったデータ変換
@@ -19,9 +21,9 @@ Capstone/
 │   └── 4_teardown.sql          # POC環境のクリーンアップ
 │
 └── streamlit_app/            # Streamlitを使った可視化アプリケーション
-    ├── app.py                  # アプリケーション本体
-    └── requirements.txt        # Pythonの依存ライブラリ
-
+├── app.py                  # アプリケーション本体
+└── requirements.txt        # Pythonの依存ライブラリ
+```
 
 ### Capstoneで行った記録メモ
 
