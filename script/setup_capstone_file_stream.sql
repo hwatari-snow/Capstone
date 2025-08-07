@@ -22,10 +22,10 @@
 -------------------------------------------------------------------------------------------
 
 -- Set your context
-use role capstone26_role;  -- replace with your role
-use warehouse cap26_wh ;  -- replace with your warehouse
-use database capstone26_db; -- replace with your database
-use schema capstone26_db.prod;  -- replace with your schema
+use role sysadmin;  -- replace with your role
+use warehouse compute_wh_xl ;  -- replace with your warehouse
+use database capstone; -- replace with your database
+use schema capstone.public;  -- replace with your schema
 
 ---------------------------------------------------------------------------
 -- 1. Create the 2 stored procedures you will need for the stream
@@ -151,14 +151,16 @@ end;
 $$
 ;
 
+
+  
 ---------------------------------------------------------------------------
 -- 2. Set sql variables for the worksheet
 ---------------------------------------------------------------------------
-set my_db_schema = 'capstone26_db.prod';  -- your capstone database and schema
-set my_raw_table = 'capstone26_db.prod.kapa_raw';  -- fully qualified name of the table where your raw kapa data resides
-set my_stage = 'capstone26_db.prod.adsb_s3_stage';  -- fully qualified name of the external stage to your bucket
-set my_json_data = 'v';  -- name of the variant column in your raw table that holds the kapa json data 
-set my_json_ff = 'capstone26_db.prod.my_json_ff';  -- fully qualified name of your JSON file format
+set my_db_schema = 'capstone.public';  -- your capstone database and schema
+set my_raw_table = 'capstone.public.kapa_raw';  -- fully qualified name of the table where your raw kapa data resides
+set my_stage = 'capstone.public.capstone_s3_stage';  -- fully qualified name of the external stage to your bucket
+set my_json_data = 'RAW_DATA';  -- name of the variant column in your raw table that holds the kapa json data 
+set my_json_ff = 'CAPSTONE.PUBLIC.kapa_json_format';  -- fully qualified name of your JSON file format
 set kapa_offset = 0; -- kapa offset for resetting replay date
 
 ---------------------------------------------------------------------------
@@ -175,9 +177,9 @@ set kapa_offset = 0; -- kapa offset for resetting replay date
 --   "v" = column name of the json variant column in your KAPA_RAW table
 --   "kapa_raw" = the name of your raw kapa table
 --   "file_name" = the name of the column that contains the File Name 
-select timediff('SECONDS', min(v:clock::timestamp), current_timestamp())
+select timediff('SECONDS', min(RAW_DATA:clock::timestamp), current_timestamp())
 from kapa_raw
-where file_name = 'kapa-0001/year=2022/month=05/day=13/kapa-0001+0+0000017717.json.gz'
+where SOURCE_FILE_NAME = 'kapa-0001/year=2022/month=05/day=13/kapa-0001+0+0000017717.json.gz'
 ;
 
 -- copy and paste the value from the query above into the kapa_offset variable
@@ -212,6 +214,10 @@ call check_s3_write
 -- that executes to create a new file in your bucket every 6 minutes.
 -- Go to the "Managing Your Task" section to manage your task.
 ---------------------------------------------------------------------------
+-- このコマンドはACCOUNTADMINロールで実行する必要があります
+use role accountadmin;
+GRANT EXECUTE MANAGED TASK ON ACCOUNT TO ROLE sysadmin;
+use role sysadmin;
 call create_stream_task
 (
   $my_db_schema,
