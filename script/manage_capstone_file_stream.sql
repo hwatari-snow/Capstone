@@ -1,7 +1,8 @@
-use role capstone26_role;  -- replace with your role
-use warehouse cap26_wh ;  -- replace with your warehouse
-use database capstone26_db; -- replace with your database
-use schema capstone26_db.prod;  -- replace with your schema
+-- Set your context
+use role sysadmin;  -- replace with your role
+use warehouse compute_wh_xl ;  -- replace with your warehouse
+use database capstone; -- replace with your database
+use schema capstone.public;  -- replace with your schema
 
 ---------------------------------------------------------------------------
 -- Managing your task
