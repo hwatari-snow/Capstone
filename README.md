@@ -35,3 +35,4 @@ https://github.com/hwatari-snow/S3_stage_integration
 
 8/6)データingectionを02_data_ingection.ipynbで実行➡️多分大丈夫
 
+8/21)taskとstreamの作成
